@@ -1,0 +1,147 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+Thống kê điểm danh
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12">
+                <form method="POST" class="form" id="formYM">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Năm</label>
+                                    <select class="form-control" name="year" id="yearpicker"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Tháng</label>
+                                    <select class="form-control" name="month" id="monthpicker">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group ml-3" style="margin-top: 32px;">
+                                    <button type="submit" class="btn btn-primary mr-4" id="fetch_student">Thống kê</button>
+                                    <!-- {% if display == True %}
+                                    <a href="/export_excel" class="btn btn-success d-inline-block ml-auto" role="button">Xuất File Excel</a>
+                                    {% endif %} -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if messages %}
+        <div class="form-group">
+            <div class="col-md-12" style="padding:0 20px;">
+                {% for message in messages %}
+                {% if message.tags == "warning" %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif message.tags == "success" %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-md-12">
+            {% if display == True %}
+            <div style="padding: 10px 15px">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr style="background:#1089FF; color:#fff">
+                            <th>ID nhân viên</th>
+                            <th>Tên nhân viên</th>
+                            <th>Phòng ban</th>
+                            <th>Số buổi điểm danh</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in count_attendance %}
+                        <tr style="background: #fff;">
+                            <td style="cursor:pointer;" data-href="{% url 'view_employee_attendance' data.employee_id__id month year %}" onclick="makeCellClickable()">{{data.employee_id__id}}</td>
+                            <td style="cursor:pointer;" data-href="{% url 'view_employee_attendance' data.employee_id__id month year %}" onclick="makeCellClickable()">{{data.name}}</td>
+                            <td style="cursor:pointer;" data-href="{% url 'view_employee_attendance' data.employee_id__id month year %}" onclick="makeCellClickable()">{{data.department_id}}</td>
+                            <td style="cursor:pointer;" data-href="{% url 'view_employee_attendance' data.employee_id__id month year %}" onclick="makeCellClickable()">{{data.dcount}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% endif %}
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+
+<script type="text/javascript">
+    let startYear = 2000;
+    let endYear = new Date().getFullYear();
+    for (i = endYear; i > startYear; i--) {
+        $('#yearpicker').append($('<option />').val(i).html(i));
+    }
+
+    const today = new Date();
+    const monthPOST = "{{month}}";
+    let month = today.getMonth() + 1;
+
+    if (monthPOST) {
+        month = monthPOST
+    }
+
+    document.getElementById('monthpicker').value = month;
+    function makeCellClickable() {
+        window.location = this.event.target.dataset.href
+    }
+
+</script>
+
+{% endblock custom_js %}

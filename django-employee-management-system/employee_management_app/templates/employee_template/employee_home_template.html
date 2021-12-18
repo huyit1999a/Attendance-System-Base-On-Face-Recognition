@@ -1,0 +1,44 @@
+{% extends 'employee_template/base_template.html' %}
+
+{% block page_title %}
+Trang chủ
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+    <div class="container-fluid">
+
+        {% comment %} Boxes Section Starts {% endcomment %}
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ total_attendance }}</h3>
+
+                        <p>Tổng lần điểm danh trong tháng</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="{% url 'employee_view_attendance' %}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+
+        </div>
+        {% comment %} Boxes Section Ends {% endcomment %}
+
+    </div><!-- /.container-fluid -->
+</section>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+
+</script>
+{% endblock custom_js %}

@@ -1,0 +1,101 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+Thống kê cá nhân
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+    <div class="container-fluid">
+        {% if messages %}
+        <div class="form-group">
+            <div class="col-12">
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                <div id="message" class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif message.tags == "success" %}
+                <div id="message" class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="div ml-auto">
+                        <a href="{% url 'export_excel' employee_id month year %}" class="btn btn-success d-inline-block ml-auto" role="button">Xuất File Excel</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card">
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr style="background:#1089FF; color:#fff">
+                                    <th>ID</th>
+                                    <th>Tên nhân viên</th>
+                                    <th>Phòng ban</th>
+                                    <th>Ngày</th>
+                                    <th>Thời gian vào</th>
+                                    <th>Thời gian ra</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dt in data %}
+                                <tr>
+                                    <td>{{ dt.employee_id.id }}</td>
+                                    <td>{{ dt.name }}</td>
+                                    <td>{{ dt.department_id }}</td>
+                                    <td>{{ dt.attendance_date | date:"d/m/Y" }}</td>
+                                    <td>{{ dt.attendance_time_in }}</td>
+                                    <td>{{ dt.attendance_time_out }}</td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+            </div>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+
+<script>
+    var message = document.getElementById("message");
+
+    setTimeout(function () {
+        message.style.display = "none";
+    }, 3000);
+</script>
+
+{% endblock custom_js %}
